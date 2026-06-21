@@ -12,19 +12,21 @@ from core.cli import CliApp
 
 load_dotenv()
 
-# Anthropic Config
-claude_model = os.getenv("CLAUDE_MODEL", "")
+# Model / provider config
+# 
+claude_model = os.getenv("CLAUDE_MODEL", "anthropic/claude-3-haiku")
+openrouter_api_key = os.getenv("OPENROUTER_API_KEY", "")
 anthropic_api_key = os.getenv("ANTHROPIC_API_KEY", "")
-
+api_key = openrouter_api_key or anthropic_api_key
 
 assert claude_model, "Error: CLAUDE_MODEL cannot be empty. Update .env"
-assert anthropic_api_key, (
-    "Error: ANTHROPIC_API_KEY cannot be empty. Update .env"
+assert api_key, (
+    "Error: Set OPENROUTER_API_KEY or ANTHROPIC_API_KEY in .env"
 )
 
 
 async def main():
-    claude_service = Claude(model="anthropic/claude-3-haiku")
+    claude_service = Claude(model=claude_model)
 
     server_scripts = sys.argv[1:]
     clients = {}
